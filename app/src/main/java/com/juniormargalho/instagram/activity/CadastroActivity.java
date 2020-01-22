@@ -79,14 +79,12 @@ public class CadastroActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if ( task.isSuccessful() ){
-
                             progressBar.setVisibility(View.GONE);
                             Toast.makeText(CadastroActivity.this, "Usuário cadastrado com sucesso!", Toast.LENGTH_SHORT).show();
                             startActivity(new Intent(getApplicationContext(), MainActivity.class));
                             finish();
 
                         }else {
-
                             progressBar.setVisibility(View.GONE);
 
                             String erroExcessao = "";
@@ -115,5 +113,7 @@ public class CadastroActivity extends AppCompatActivity {
         campoSenha = findViewById(R.id.editCadastroSenha);
         botaoCadastrar = findViewById(R.id.buttonCadastrar);
         progressBar = findViewById(R.id.progressCadastro);
+
+        campoNome.requestFocus();
     }
 }

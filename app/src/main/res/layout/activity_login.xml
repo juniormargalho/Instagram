@@ -56,13 +56,13 @@
         android:padding="10dp"
         android:textColor="@android:color/white"
         android:textColorHint="@android:color/white"
-        app:layout_constraintBottom_toTopOf="@+id/buttonLoginEntrar"
+        app:layout_constraintBottom_toTopOf="@+id/buttonEntrar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editLoginEmail" />
 
     <Button
-        android:id="@+id/buttonLoginEntrar"
+        android:id="@+id/buttonEntrar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
@@ -90,7 +90,7 @@
         app:layout_constraintBottom_toTopOf="@+id/progressLogin"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buttonLoginEntrar" />
+        app:layout_constraintTop_toBottomOf="@+id/buttonEntrar" />
 
     <ProgressBar
         android:id="@+id/progressLogin"
