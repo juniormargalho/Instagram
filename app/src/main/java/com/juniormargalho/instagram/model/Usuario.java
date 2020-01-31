@@ -1,9 +1,19 @@
 package com.juniormargalho.instagram.model;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.Exclude;
+import com.juniormargalho.instagram.helper.ConfiguracaoFirebase;
+
 public class Usuario {
     private String id, nome, email, senha, caminhoFoto;
 
     public Usuario() {
+    }
+
+    public void salvar(){
+        DatabaseReference firebaseRef = ConfiguracaoFirebase.getReferenciaDatabase();
+        DatabaseReference usuariosRef = firebaseRef.child("usuarios").child( getId() );
+        usuariosRef.setValue(this);
     }
 
     public String getId() {
@@ -30,6 +40,7 @@ public class Usuario {
         this.email = email;
     }
 
+    @Exclude
     public String getSenha() {
         return senha;
     }
