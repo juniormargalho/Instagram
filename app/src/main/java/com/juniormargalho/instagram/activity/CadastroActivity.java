@@ -20,6 +20,7 @@ import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.juniormargalho.instagram.R;
 import com.juniormargalho.instagram.helper.ConfiguracaoFirebase;
+import com.juniormargalho.instagram.helper.UsuarioFirebase;
 import com.juniormargalho.instagram.model.Usuario;
 
 public class CadastroActivity extends AppCompatActivity {
@@ -86,6 +87,9 @@ public class CadastroActivity extends AppCompatActivity {
                                 String idUsuario = task.getResult().getUser().getUid();
                                 usuario.setId(idUsuario);
                                 usuario.salvar();
+
+                                //salvando dados no profile do database
+                                UsuarioFirebase.atualizarNomeUsuario( usuario.getNome() );
 
                                 Toast.makeText(CadastroActivity.this, "Usuário cadastrado com sucesso!", Toast.LENGTH_SHORT).show();
                                 startActivity(new Intent(getApplicationContext(), MainActivity.class));
