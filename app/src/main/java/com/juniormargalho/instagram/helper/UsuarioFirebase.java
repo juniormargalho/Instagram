@@ -1,5 +1,6 @@
 package com.juniormargalho.instagram.helper;
 
+import android.net.Uri;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -16,6 +17,10 @@ public class UsuarioFirebase {
     public static FirebaseUser getUsuarioAtual(){
         FirebaseAuth usuario = ConfiguracaoFirebase.getInstanciaAutenticacao();
         return usuario.getCurrentUser();
+    }
+
+    public static String getIdentificadorUsuario(){
+        return getUsuarioAtual().getUid();
     }
 
     public static void atualizarNomeUsuario(String nome){
@@ -35,7 +40,28 @@ public class UsuarioFirebase {
                     }
                 }
             });
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
 
+    public static void atualizarFotoUsuario(Uri url){
+
+        try{
+            FirebaseUser usuarioAtual = getUsuarioAtual();
+
+            //configurar objeto para alteracao do perfil
+            UserProfileChangeRequest profile = new UserProfileChangeRequest.Builder()
+                    .setPhotoUri( url )
+                    .build();
+            usuarioAtual.updateProfile(profile).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    if( !task.isSuccessful() ){
+                        Log.d("Perfil", "Erro ao atualizar foto de perfil");
+                    }
+                }
+            });
         }catch (Exception e){
             e.printStackTrace();
         }
