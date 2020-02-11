@@ -4,7 +4,9 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SearchView;
+
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
@@ -18,6 +20,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.juniormargalho.instagram.R;
+import com.juniormargalho.instagram.adapter.AdapterPesquisa;
 import com.juniormargalho.instagram.helper.ConfiguracaoFirebase;
 import com.juniormargalho.instagram.model.Usuario;
 
@@ -29,6 +32,7 @@ public class PesquisaFragment extends Fragment {
     private RecyclerView recyclerPesquisa;
     private List<Usuario> listaUsuarios;
     private DatabaseReference usuariosRef;
+    private AdapterPesquisa adapterPesquisa;
 
     public PesquisaFragment() {
     }
@@ -58,6 +62,13 @@ public class PesquisaFragment extends Fragment {
                 return true;
             }
         });
+
+        //configuracao recyclerView
+        recyclerPesquisa.setHasFixedSize(true);
+        recyclerPesquisa.setLayoutManager(new LinearLayoutManager(getActivity()));
+        adapterPesquisa = new AdapterPesquisa(listaUsuarios, getActivity());
+        recyclerPesquisa.setAdapter(adapterPesquisa);
+
         return view;
     }
 
@@ -67,30 +78,27 @@ public class PesquisaFragment extends Fragment {
         listaUsuarios.clear();
 
         //pesquisar usuarios caso tenha exista texto na pesquisa
-        if( texto.length() > 0 ){
+        if( texto.length() >= 2 ){
             Query query = usuariosRef.orderByChild("nome").startAt(texto).endAt(texto + "\uf8ff");
             query.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                    //necessario tambem limpar a lista
+                    listaUsuarios.clear();
 
                     //percorre o database de usuarios e monta a lista
                     for(DataSnapshot ds : dataSnapshot.getChildren()){
                         listaUsuarios.add(ds.getValue(Usuario.class));
                     }
 
-                    //exibir a lista
-                    int total = listaUsuarios.size();
-                    Log.i("search", "total: " + total);
-
+                    adapterPesquisa.notifyDataSetChanged();
                 }
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
-
                 }
             });
         }
-
     }
-
 }
