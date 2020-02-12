@@ -1,5 +1,6 @@
 package com.juniormargalho.instagram.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -9,10 +10,10 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -20,8 +21,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.juniormargalho.instagram.R;
+import com.juniormargalho.instagram.activity.PerfilAmigoActivity;
 import com.juniormargalho.instagram.adapter.AdapterPesquisa;
 import com.juniormargalho.instagram.helper.ConfiguracaoFirebase;
+import com.juniormargalho.instagram.helper.RecyclerItemClickListener;
 import com.juniormargalho.instagram.model.Usuario;
 
 import java.util.ArrayList;
@@ -68,6 +71,28 @@ public class PesquisaFragment extends Fragment {
         recyclerPesquisa.setLayoutManager(new LinearLayoutManager(getActivity()));
         adapterPesquisa = new AdapterPesquisa(listaUsuarios, getActivity());
         recyclerPesquisa.setAdapter(adapterPesquisa);
+
+        //configuracao evento de clique
+        recyclerPesquisa.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), recyclerPesquisa,
+                new RecyclerItemClickListener.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
+                        Usuario usuarioSelecionado = listaUsuarios.get(position);
+                        Intent i = new Intent(getActivity(), PerfilAmigoActivity.class);
+                        i.putExtra("usuarioSelecionado", usuarioSelecionado);
+                        startActivity(i);
+                    }
+
+                    @Override
+                    public void onLongItemClick(View view, int position) {
+
+                    }
+
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                    }
+                }));
 
         return view;
     }
