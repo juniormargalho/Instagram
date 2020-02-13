@@ -16,6 +16,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.juniormargalho.instagram.R;
 import com.juniormargalho.instagram.helper.ConfiguracaoFirebase;
+import com.juniormargalho.instagram.helper.UsuarioFirebase;
 import com.juniormargalho.instagram.model.Usuario;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -24,10 +25,10 @@ public class PerfilAmigoActivity extends AppCompatActivity {
     private Usuario usuarioSelecionado;
     private Button buttonAcaoPerfil;
     private CircleImageView imagePerfil;
-    private DatabaseReference usuariosRef;
-    private DatabaseReference usuarioAmigoRef;
+    private DatabaseReference usuariosRef, usuarioAmigoRef, seguidoresRef, firebaseRef, seguidorRef;
     private ValueEventListener valueEventListenerPerfilAmigo;
     private TextView textPublicacoes, textSeguidores, textSeguindo;
+    private String idUsuarioLogado;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +36,10 @@ public class PerfilAmigoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_perfil_amigo);
 
         //configuracoes iniciais
-        usuariosRef = ConfiguracaoFirebase.getReferenciaDatabase().child("usuarios");
+        firebaseRef = ConfiguracaoFirebase.getReferenciaDatabase();
+        usuariosRef = firebaseRef.child("usuarios");
+        seguidoresRef = firebaseRef.child("seguidores");
+        idUsuarioLogado = UsuarioFirebase.getIdentificadorUsuario();
 
         inicializarComponentes();
 
@@ -61,7 +65,36 @@ public class PerfilAmigoActivity extends AppCompatActivity {
                 Uri url = Uri.parse(caminhoFoto);
                 Glide.with(PerfilAmigoActivity.this).load(url).into(imagePerfil);
             }
+        }
 
+        verificaSegueUsuarioAmigo();
+    }
+
+    private void verificaSegueUsuarioAmigo(){
+        seguidorRef = seguidoresRef.child(idUsuarioLogado).child(usuarioSelecionado.getId());
+
+        //executa o listener apenas uma unica vez
+        seguidorRef. addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+                    habilitarBotaoSeguir(true);
+                }else {
+                    habilitarBotaoSeguir(false);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
+    }
+
+    private void habilitarBotaoSeguir(boolean segueUsuario){
+        if(segueUsuario){
+            buttonAcaoPerfil.setText("Seguindo");
+        }else {
+            buttonAcaoPerfil.setText("Seguir");
         }
     }
 
