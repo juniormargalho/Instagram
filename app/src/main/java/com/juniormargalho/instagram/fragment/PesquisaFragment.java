@@ -25,6 +25,7 @@ import com.juniormargalho.instagram.activity.PerfilAmigoActivity;
 import com.juniormargalho.instagram.adapter.AdapterPesquisa;
 import com.juniormargalho.instagram.helper.ConfiguracaoFirebase;
 import com.juniormargalho.instagram.helper.RecyclerItemClickListener;
+import com.juniormargalho.instagram.helper.UsuarioFirebase;
 import com.juniormargalho.instagram.model.Usuario;
 
 import java.util.ArrayList;
@@ -36,6 +37,7 @@ public class PesquisaFragment extends Fragment {
     private List<Usuario> listaUsuarios;
     private DatabaseReference usuariosRef;
     private AdapterPesquisa adapterPesquisa;
+    private String idUsuarioLogado;
 
     public PesquisaFragment() {
     }
@@ -49,6 +51,7 @@ public class PesquisaFragment extends Fragment {
         recyclerPesquisa = view.findViewById(R.id.recyclerPesquisa);
         listaUsuarios = new ArrayList<>();
         usuariosRef = ConfiguracaoFirebase.getReferenciaDatabase().child("usuarios");
+        idUsuarioLogado = UsuarioFirebase.getIdentificadorUsuario();
 
         //configuracao searchView
         searchViewPesquisa.setQueryHint("Buscar usuários");
@@ -85,15 +88,12 @@ public class PesquisaFragment extends Fragment {
 
                     @Override
                     public void onLongItemClick(View view, int position) {
-
                     }
 
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
                     }
                 }));
-
         return view;
     }
 
@@ -114,7 +114,13 @@ public class PesquisaFragment extends Fragment {
 
                     //percorre o database de usuarios e monta a lista
                     for(DataSnapshot ds : dataSnapshot.getChildren()){
-                        listaUsuarios.add(ds.getValue(Usuario.class));
+                        Usuario usuario = ds.getValue(Usuario.class);
+
+                        //verifica o usuario logado e retorna para o for sem adiciona-lo a lista
+                        if(idUsuarioLogado.equals(usuario.getId())){
+                            continue;
+                        }
+                        listaUsuarios.add(usuario);
                     }
 
                     adapterPesquisa.notifyDataSetChanged();
