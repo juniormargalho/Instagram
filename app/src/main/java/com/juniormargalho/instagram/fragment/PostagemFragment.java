@@ -2,6 +2,8 @@ package com.juniormargalho.instagram.fragment;
 
 import android.Manifest;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -13,7 +15,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.juniormargalho.instagram.R;
+import com.juniormargalho.instagram.activity.FiltroActivity;
 import com.juniormargalho.instagram.helper.Permissao;
+
+import java.io.ByteArrayOutputStream;
 
 public class PostagemFragment extends Fragment {
     private Button buttonAbrirCamera, buttonAbrirGaleria;
@@ -59,8 +64,47 @@ public class PostagemFragment extends Fragment {
                 }
             }
         });
-
         return view;
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(resultCode == getActivity().RESULT_OK){
+            Bitmap imagem = null;
+
+            try {
+                //validar tipo de selecao da imagem
+                switch (requestCode){
+                    case SELECAO_CAMERA:
+                        imagem = (Bitmap) data.getExtras().get("data");
+                        break;
+                    case SELECAO_GALERIA:
+                        Uri localImagemSelecionada = data.getData();
+                        imagem = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), localImagemSelecionada);
+                        break;
+                }
+
+                //valida imagem selecionada
+                if(imagem != null){
+
+                    //converte imagem em byte array
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    imagem.compress(Bitmap.CompressFormat.JPEG, 70, baos);
+                    byte[] dadosImagem = baos.toByteArray();
+
+                    //envia imagem escolhida para aplicacao de filtros
+                    Intent i = new Intent(getActivity(), FiltroActivity.class);
+                    i.putExtra("fotoEscolhida", dadosImagem);
+                    startActivity(i);
+                }
+
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
+        }
+
+    }
 }
