@@ -130,9 +130,11 @@ public class EditarPerfilActivity extends AppCompatActivity {
 
                     //salvando no firebase storage
                     ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
                     imagem.compress(Bitmap.CompressFormat.JPEG, 70, baos);
                     byte[] dadosImagem = baos.toByteArray();
                     final StorageReference imagemRef = storageRef.child("imagens").child("perfil").child(identificadorUsuario + ".jpeg");
+
                     UploadTask uploadTask = imagemRef.putBytes( dadosImagem );
                     uploadTask.addOnFailureListener(new OnFailureListener() {
                         @Override
