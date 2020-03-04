@@ -79,7 +79,6 @@ public class PerfilAmigoActivity extends AppCompatActivity {
 
             //configurar foto do usuario
             String caminhoFoto = usuarioSelecionado.getCaminhoFoto();
-
             if(caminhoFoto != null){
                 Uri url = Uri.parse(caminhoFoto);
                 Glide.with(PerfilAmigoActivity.this).load(url).into(imagePerfil);
@@ -111,9 +110,7 @@ public class PerfilAmigoActivity extends AppCompatActivity {
                 int tamanhoGrid = getResources().getDisplayMetrics().widthPixels;
                 int tamanhoImagem = tamanhoGrid / 3;
                 gridViewPerfil.setColumnWidth(tamanhoImagem);
-
                 List<String> urlFotos = new ArrayList<>();
-
                 for (DataSnapshot ds:dataSnapshot.getChildren()){
                     Postagem postagem = ds.getValue(Postagem.class);
                     urlFotos.add(postagem.getCaminhoFoto());
@@ -124,7 +121,6 @@ public class PerfilAmigoActivity extends AppCompatActivity {
                 //configurar adapter
                 adapterGrid = new AdapterGrid(getApplicationContext(), R.layout.grid_postagem, urlFotos);
                 gridViewPerfil.setAdapter(adapterGrid);
-
             }
 
             @Override
@@ -139,7 +135,6 @@ public class PerfilAmigoActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 usuarioLogado = dataSnapshot.getValue(Usuario.class);
-
                 verificaSegueUsuarioAmigo();
             }
 
