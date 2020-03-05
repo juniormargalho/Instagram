@@ -50,7 +50,6 @@ public class VisualizarPostagemActivity extends AppCompatActivity {
             Glide.with(VisualizarPostagemActivity.this).load(uriPostagem).into(imagePostagemSelecionada);
             textDescricaoPostagem.setText(postagem.getDescricao());
         }
-
     }
 
     private void inicializarComponentes(){
