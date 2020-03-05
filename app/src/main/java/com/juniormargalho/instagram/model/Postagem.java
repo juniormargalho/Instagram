@@ -3,7 +3,9 @@ package com.juniormargalho.instagram.model;
 import com.google.firebase.database.DatabaseReference;
 import com.juniormargalho.instagram.helper.ConfiguracaoFirebase;
 
-public class Postagem {
+import java.io.Serializable;
+
+public class Postagem implements Serializable {
     private String id, idUsuario, descricao, caminhoFoto;
 
     public Postagem() {
