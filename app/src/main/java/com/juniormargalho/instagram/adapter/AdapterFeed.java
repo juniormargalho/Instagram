@@ -1,6 +1,7 @@
 package com.juniormargalho.instagram.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +18,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.juniormargalho.instagram.R;
+import com.juniormargalho.instagram.activity.ComentariosActivity;
 import com.juniormargalho.instagram.helper.ConfiguracaoFirebase;
 import com.juniormargalho.instagram.helper.UsuarioFirebase;
 import com.juniormargalho.instagram.model.Feed;
@@ -59,6 +61,16 @@ public class AdapterFeed extends RecyclerView.Adapter<AdapterFeed.MyViewHolder> 
 
         holder.descricao.setText(feed.getDescricao());
         holder.nome.setText(feed.getNomeUsuario());
+
+        //adiciona evento de clique nos comentarios
+        holder.visualizarComentario.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(context, ComentariosActivity.class);
+                i.putExtra("idPostagem", feed.getId());
+                context.startActivity(i);
+            }
+        });
 
         //recuperar dados da postagem curtida
         DatabaseReference curtidasRef = ConfiguracaoFirebase.getReferenciaDatabase().child("postagens-curtidas").child(feed.getId());
